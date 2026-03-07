@@ -69,7 +69,7 @@ print_status "Linting passed"
 # Step 6: Run unit tests
 echo ""
 echo "Step 6: Running unit tests..."
-uv run pytest tests/test_client.py -v
+uv run pytest tests/ -v
 print_status "Unit tests passed"
 
 # Step 7: Build the package

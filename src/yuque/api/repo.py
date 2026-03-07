@@ -16,19 +16,58 @@ class RepoAPI(BaseAPI):
         response = self._request("GET", f"/api/v2/repos/{book_id}")
         return response["data"]
 
+    async def get_async(self, book_id: int) -> dict[str, Any]:
+        """Async version of get()."""
+        response = await self._request_async("GET", f"/api/v2/repos/{book_id}")
+        return response["data"]
+
     def get_by_path(self, group_login: str, book_slug: str) -> dict[str, Any]:
         """Get a repository by group path and book slug."""
         response = self._request("GET", f"/api/v2/repos/{group_login}/{book_slug}")
         return response["data"]
 
+    async def get_by_path_async(self, group_login: str, book_slug: str) -> dict[str, Any]:
+        """Async version of get_by_path()."""
+        response = await self._request_async("GET", f"/api/v2/repos/{group_login}/{book_slug}")
+        return response["data"]
+
     def list(self, offset: int = 0, limit: int = 100) -> PaginatedResponse:
         """List repositories for the authenticated user."""
-        response = self._request("GET", "/api/v2/repos", params={"offset": offset, "limit": limit})
+        user = self._client.user.get_me()
+        login = user.login if hasattr(user, "login") else user.data.get("login")
+        response = self._request(
+            "GET", f"/api/v2/users/{login}/repos", params={"offset": offset, "limit": limit}
+        )
+        return self._parse_paginated_response(response)
+
+    async def list_async(self, offset: int = 0, limit: int = 100) -> PaginatedResponse:
+        """Async version of list()."""
+        user = await self._client.user.get_me_async()
+        login = user.login if hasattr(user, "login") else user.data.get("login")
+        response = await self._request_async(
+            "GET", f"/api/v2/users/{login}/repos", params={"offset": offset, "limit": limit}
+        )
+        return self._parse_paginated_response(response)
+
+    async def list_async(self, offset: int = 0, limit: int = 100) -> PaginatedResponse:
+        """Async version of list()."""
+        response = await self._request_async(
+            "GET", "/api/v2/user/repos", params={"offset": offset, "limit": limit}
+        )
         return self._parse_paginated_response(response)
 
     def get_user_repos(self, login: str, offset: int = 0, limit: int = 100) -> PaginatedResponse:
         """Get repositories for a specific user."""
         response = self._request(
+            "GET", f"/api/v2/users/{login}/repos", params={"offset": offset, "limit": limit}
+        )
+        return self._parse_paginated_response(response)
+
+    async def get_user_repos_async(
+        self, login: str, offset: int = 0, limit: int = 100
+    ) -> PaginatedResponse:
+        """Async version of get_user_repos()."""
+        response = await self._request_async(
             "GET", f"/api/v2/users/{login}/repos", params={"offset": offset, "limit": limit}
         )
         return self._parse_paginated_response(response)
@@ -40,14 +79,33 @@ class RepoAPI(BaseAPI):
         )
         return self._parse_paginated_response(response)
 
+    async def get_group_repos_async(
+        self, login: str, offset: int = 0, limit: int = 100
+    ) -> PaginatedResponse:
+        """Async version of get_group_repos()."""
+        response = await self._request_async(
+            "GET", f"/api/v2/groups/{login}/repos", params={"offset": offset, "limit": limit}
+        )
+        return self._parse_paginated_response(response)
+
     def get_toc(self, book_id: int) -> list[dict[str, Any]]:
         """Get table of contents for a repository."""
         response = self._request("GET", f"/api/v2/repos/{book_id}/toc")
         return response.get("data", [])
 
+    async def get_toc_async(self, book_id: int) -> list[dict[str, Any]]:
+        """Async version of get_toc()."""
+        response = await self._request_async("GET", f"/api/v2/repos/{book_id}/toc")
+        return response.get("data", [])
+
     def get_toc_by_path(self, group_login: str, book_slug: str) -> list[dict[str, Any]]:
         """Get table of contents by group path and book slug."""
         response = self._request("GET", f"/api/v2/repos/{group_login}/{book_slug}/toc")
+        return response.get("data", [])
+
+    async def get_toc_by_path_async(self, group_login: str, book_slug: str) -> list[dict[str, Any]]:
+        """Async version of get_toc_by_path()."""
+        response = await self._request_async("GET", f"/api/v2/repos/{group_login}/{book_slug}/toc")
         return response.get("data", [])
 
     def create_repo(

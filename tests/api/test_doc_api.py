@@ -237,12 +237,13 @@ class TestDocAPICreate:
 
 class TestDocAPIUpdate:
     def test_update(self, doc_api, mock_client, sample_doc_data):
+        book_id = 200
         doc_id = 12345
         title = "Updated Title"
         body = "Updated content"
         mock_client._request.return_value = {"data": sample_doc_data}
 
-        result = doc_api.update(doc_id, title=title, body=body)
+        result = doc_api.update(book_id, doc_id, title=title, body=body)
 
         expected_data = {
             "title": title,
@@ -252,7 +253,7 @@ class TestDocAPIUpdate:
             "public": 0,
         }
         mock_client._request.assert_called_once_with(
-            "PUT", f"/api/v2/repos/docs/{doc_id}", None, expected_data
+            "PUT", f"/api/v2/repos/{book_id}/docs/{doc_id}", None, expected_data
         )
         assert result == sample_doc_data
 
@@ -321,24 +322,26 @@ class TestDocAPIUpdate:
 
 class TestDocAPIDelete:
     def test_delete(self, doc_api, mock_client):
+        book_id = 200
         doc_id = 12345
         mock_client._request.return_value = {"data": {"success": True}}
 
-        result = doc_api.delete(doc_id)
+        result = doc_api.delete(book_id, doc_id)
 
         mock_client._request.assert_called_once_with(
-            "DELETE", f"/api/v2/repos/docs/{doc_id}", None, None
+            "DELETE", f"/api/v2/repos/{book_id}/docs/{doc_id}", None, None
         )
         assert result == {"success": True}
 
     def test_delete_no_data(self, doc_api, mock_client):
+        book_id = 200
         doc_id = 12345
         mock_client._request.return_value = {}
 
-        result = doc_api.delete(doc_id)
+        result = doc_api.delete(book_id, doc_id)
 
         mock_client._request.assert_called_once_with(
-            "DELETE", f"/api/v2/repos/docs/{doc_id}", None, None
+            "DELETE", f"/api/v2/repos/{book_id}/docs/{doc_id}", None, None
         )
         assert result == {}
 

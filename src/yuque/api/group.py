@@ -12,13 +12,32 @@ class GroupAPI(BaseAPI):
     """API endpoints for group operations."""
 
     def get(self, login: str) -> dict[str, Any]:
-        """Get a group by login name."""
+        """Get a group by login name.
+
+        DEPRECATED: The Yuque API does not have a direct endpoint to get group info.
+        This method will always return a 404 error.
+        Consider using get_members() or get_repos() to get group information.
+        """
         response = self._request("GET", f"/api/v2/groups/{login}")
+        return response["data"]
+
+    async def get_async(self, login: str) -> dict[str, Any]:
+        """Async version of get()."""
+        response = await self._request_async("GET", f"/api/v2/groups/{login}")
         return response["data"]
 
     def get_repos(self, login: str, offset: int = 0, limit: int = 100) -> PaginatedResponse:
         """Get repositories in a group."""
         response = self._request(
+            "GET", f"/api/v2/groups/{login}/repos", params={"offset": offset, "limit": limit}
+        )
+        return self._parse_paginated_response(response)
+
+    async def get_repos_async(
+        self, login: str, offset: int = 0, limit: int = 100
+    ) -> PaginatedResponse:
+        """Async version of get_repos()."""
+        response = await self._request_async(
             "GET", f"/api/v2/groups/{login}/repos", params={"offset": offset, "limit": limit}
         )
         return self._parse_paginated_response(response)
@@ -30,9 +49,27 @@ class GroupAPI(BaseAPI):
         )
         return self._parse_paginated_response(response)
 
+    async def get_members_async(
+        self, login: str, offset: int = 0, limit: int = 100
+    ) -> PaginatedResponse:
+        """Async version of get_members()."""
+        response = await self._request_async(
+            "GET", f"/api/v2/groups/{login}/users", params={"offset": offset, "limit": limit}
+        )
+        return self._parse_paginated_response(response)
+
     def add_member(self, login: str, user_id: int, role: int = 1) -> dict[str, Any]:
         """Add a member to a group."""
         response = self._request(
+            "POST",
+            f"/api/v2/groups/{login}/users",
+            json_data={"user_id": user_id, "role": role},
+        )
+        return response.get("data", {})
+
+    async def add_member_async(self, login: str, user_id: int, role: int = 1) -> dict[str, Any]:
+        """Async version of add_member()."""
+        response = await self._request_async(
             "POST",
             f"/api/v2/groups/{login}/users",
             json_data={"user_id": user_id, "role": role},
@@ -48,14 +85,33 @@ class GroupAPI(BaseAPI):
         )
         return response.get("data", {})
 
+    async def update_member_async(self, login: str, user_id: int, role: int) -> dict[str, Any]:
+        """Async version of update_member()."""
+        response = await self._request_async(
+            "PUT",
+            f"/api/v2/groups/{login}/users/{user_id}",
+            json_data={"role": role},
+        )
+        return response.get("data", {})
+
     def remove_member(self, login: str, user_id: int) -> dict[str, Any]:
         """Remove a member from a group."""
         response = self._request("DELETE", f"/api/v2/groups/{login}/users/{user_id}")
         return response.get("data", {})
 
+    async def remove_member_async(self, login: str, user_id: int) -> dict[str, Any]:
+        """Async version of remove_member()."""
+        response = await self._request_async("DELETE", f"/api/v2/groups/{login}/users/{user_id}")
+        return response.get("data", {})
+
     def get_statistics(self, login: str) -> dict[str, Any]:
         """Get group statistics."""
         response = self._request("GET", f"/api/v2/groups/{login}/statistics")
+        return response["data"]
+
+    async def get_statistics_async(self, login: str) -> dict[str, Any]:
+        """Async version of get_statistics()."""
+        response = await self._request_async("GET", f"/api/v2/groups/{login}/statistics")
         return response["data"]
 
     def get_by_id(self, group_id: int) -> dict[str, Any]:

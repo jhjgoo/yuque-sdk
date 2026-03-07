@@ -95,11 +95,22 @@ async def search_content(
         lines.append("")
 
         for idx, result in enumerate(results, 1):
-            result_id = getattr(result, "id", "N/A")
-            result_type = getattr(result, "type", type)
-            title = getattr(result, "title", "Untitled")
-            summary = getattr(result, "summary", None)
-            url = getattr(result, "url", None)
+            if isinstance(result, dict):
+                result_id = result.get("id", "N/A")
+                result_type = result.get("type", type)
+                title = result.get("title", "Untitled")
+                summary = result.get("summary")
+                url = result.get("url")
+                user = result.get("user")
+                book = result.get("book")
+            else:
+                result_id = getattr(result, "id", "N/A")
+                result_type = getattr(result, "type", type)
+                title = getattr(result, "title", "Untitled")
+                summary = getattr(result, "summary", None)
+                url = getattr(result, "url", None)
+                user = getattr(result, "user", None)
+                book = getattr(result, "book", None)
 
             lines.append(f"## {idx}. {title}")
             lines.append(f"- **ID**: {result_id}")
@@ -115,17 +126,23 @@ async def search_content(
             if url:
                 lines.append(f"- **URL**: {url}")
 
-            user = getattr(result, "user", None)
             if user:
-                user_name = getattr(user, "name", None)
-                user_login = getattr(user, "login", None)
+                if isinstance(user, dict):
+                    user_name = user.get("name")
+                    user_login = user.get("login")
+                else:
+                    user_name = getattr(user, "name", None)
+                    user_login = getattr(user, "login", None)
                 if user_name or user_login:
                     lines.append(f"- **Author**: {user_name or user_login}")
 
-            book = getattr(result, "book", None)
             if book:
-                book_name = getattr(book, "name", None)
-                book_slug = getattr(book, "slug", None)
+                if isinstance(book, dict):
+                    book_name = book.get("name")
+                    book_slug = book.get("slug")
+                else:
+                    book_name = getattr(book, "name", None)
+                    book_slug = getattr(book, "slug", None)
                 if book_name or book_slug:
                     lines.append(f"- **Repository**: {book_name or book_slug}")
 

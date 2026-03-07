@@ -14,6 +14,9 @@ def mock_client():
     client = Mock()
     client._request = Mock(return_value={"data": {}})
     client._request_async = AsyncMock(return_value={"data": {}})
+    client.user = Mock()
+    client.user.get_me = Mock(return_value=Mock(login="testuser"))
+    client.user.get_me_async = AsyncMock(return_value=Mock(login="testuser"))
     return client
 
 
@@ -64,11 +67,13 @@ class TestRepoAPIGet:
             "data": repos_data,
             "meta": {"page": 1, "per_page": 100, "total": 2, "total_pages": 1},
         }
+        mock_client.user.get_me.return_value = Mock(login="testuser")
 
         result = repo_api.list()
 
+        mock_client.user.get_me.assert_called_once()
         mock_client._request.assert_called_once_with(
-            "GET", "/api/v2/repos", {"offset": 0, "limit": 100}, None
+            "GET", "/api/v2/users/testuser/repos", {"offset": 0, "limit": 100}, None
         )
         assert isinstance(result, PaginatedResponse)
         assert result.data == repos_data
@@ -78,11 +83,13 @@ class TestRepoAPIGet:
         limit = 20
         repos_data = [{"id": 3, "name": "Repo 3"}]
         mock_client._request.return_value = {"data": repos_data}
+        mock_client.user.get_me.return_value = Mock(login="testuser")
 
         result = repo_api.list(offset=offset, limit=limit)
 
+        mock_client.user.get_me.assert_called_once()
         mock_client._request.assert_called_once_with(
-            "GET", "/api/v2/repos", {"offset": offset, "limit": limit}, None
+            "GET", "/api/v2/users/testuser/repos", {"offset": offset, "limit": limit}, None
         )
         assert result.data == repos_data
 

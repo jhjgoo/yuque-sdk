@@ -313,6 +313,34 @@ class YuqueClient:
 
         return all_items
 
+    async def _request_paginated_async(
+        self,
+        method: str,
+        endpoint: str,
+        params: dict[str, Any] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Async version of _request_paginated()."""
+        all_items: list[dict[str, Any]] = []
+        page = params.get("page", 1) if params else 1
+
+        while True:
+            page_params = {**(params or {}), "page": page}
+            response = await self._request_async(method, endpoint, params=page_params)
+            items = response.get("data", response if isinstance(response, list) else [])
+            meta = response.get("meta")
+
+            all_items.extend(items if isinstance(items, list) else [items])
+
+            if meta is None:
+                break
+
+            if page >= meta.get("total_pages", page):
+                break
+
+            page += 1
+
+        return all_items
+
     def _parse_paginated_response(
         self,
         response: dict[str, Any],

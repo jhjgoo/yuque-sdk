@@ -321,6 +321,7 @@ def register_doc_tools(mcp: FastMCP, client: YuqueClient) -> None:
 
     @mcp.tool()
     async def yuque_update_doc(
+        book_id: int,
         doc_id: int,
         title: str | None = None,
         slug: str | None = None,
@@ -334,6 +335,7 @@ def register_doc_tools(mcp: FastMCP, client: YuqueClient) -> None:
         Only provided parameters will be updated; others remain unchanged.
 
         Args:
+            book_id: The unique identifier of the repository (knowledge base).
             doc_id: The unique identifier of the document to update.
             title: The new title for the document (optional).
             slug: The new URL slug for the document (optional).
@@ -351,7 +353,8 @@ def register_doc_tools(mcp: FastMCP, client: YuqueClient) -> None:
         Example:
             To update a document's title and content:
             {
-                "doc_id": 12345,
+                "book_id": 12345,
+                "doc_id": 67890,
                 "title": "Updated Title",
                 "body": "# Updated Content\\n\\nThis document has been updated.",
                 "format": "markdown",
@@ -360,6 +363,7 @@ def register_doc_tools(mcp: FastMCP, client: YuqueClient) -> None:
         """
         try:
             doc = client.doc.update(
+                book_id=book_id,
                 doc_id=doc_id,
                 title=title,
                 slug=slug,
@@ -438,13 +442,14 @@ def register_doc_tools(mcp: FastMCP, client: YuqueClient) -> None:
             }
 
     @mcp.tool()
-    async def yuque_delete_doc(doc_id: int) -> dict[str, Any]:
+    async def yuque_delete_doc(book_id: int, doc_id: int) -> dict[str, Any]:
         """Delete a document.
 
         This tool permanently deletes a document from the repository.
         This action cannot be undone, so use with caution.
 
         Args:
+            book_id: The unique identifier of the repository (knowledge base).
             doc_id: The unique identifier of the document to delete.
 
         Returns:
@@ -456,13 +461,14 @@ def register_doc_tools(mcp: FastMCP, client: YuqueClient) -> None:
             This action is permanent and cannot be undone.
 
         Example:
-            To delete document with ID 12345:
+            To delete document with ID 12345 from repository 67890:
             {
+                "book_id": 67890,
                 "doc_id": 12345
             }
         """
         try:
-            client.doc.delete(doc_id=doc_id)
+            client.doc.delete(book_id=book_id, doc_id=doc_id)
             return {
                 "success": True,
                 "data": {

@@ -21,18 +21,32 @@ class UserAPI(BaseAPI):
         response = await self._request_async("GET", "/api/v2/user")
         return User(**response["data"])
 
-    def get_by_id(self, user_id: int) -> User:
-        """Get a user by their ID."""
+    def get_by_id(self, user_id: str | int) -> User:
+        """Get a user by their ID or login.
+
+        DEPRECATED: The Yuque API does not support getting user info by ID or login.
+        Only the current authenticated user can be retrieved via get_me().
+        This method will always return a 404 error.
+        """
         response = self._request("GET", f"/api/v2/users/{user_id}")
         return User(**response["data"])
 
-    async def get_by_id_async(self, user_id: int) -> User:
+    async def get_by_id_async(self, user_id: str | int) -> User:
         """Async version of get_by_id()."""
         response = await self._request_async("GET", f"/api/v2/users/{user_id}")
         return User(**response["data"])
 
-    def get_groups(self, user_id: int, offset: int = 0) -> list[dict[str, Any]]:
-        """Get groups that a user belongs to."""
+    def get_groups(self, user_id: str | int, offset: int = 0) -> list[dict[str, Any]]:
+        """Get groups that a user belongs to.
+
+        Note: Due to API limitations, this only works for the current authenticated user.
+        """
         return self._client._request_paginated(
+            "GET", f"/api/v2/users/{user_id}/groups", params={"offset": offset}
+        )
+
+    async def get_groups_async(self, user_id: str | int, offset: int = 0) -> list[dict[str, Any]]:
+        """Async version of get_groups()."""
+        return await self._client._request_paginated_async(
             "GET", f"/api/v2/users/{user_id}/groups", params={"offset": offset}
         )
