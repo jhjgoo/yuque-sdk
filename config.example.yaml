@@ -1,0 +1,25 @@
+# Yuque SDK Test Configuration Template
+# Copy this file to config.yaml and fill in your actual values
+
+# API Token for testing (get from https://www.yuque.com/yuque/developer/api)
+api_token: ""
+
+# Test Group Login (team/organization login)
+test_group_login: ""
+
+# Test Book (Repository) configuration
+test_book:
+  # Book slug (path name)
+  slug: ""
+  # Book ID (numeric identifier)
+  id: 0
+
+# Pagination defaults for tests
+pagination:
+  default_offset: 0
+  default_limit: 100
+
+# Search test configuration
+search:
+  default_keyword: "AI"
+  default_type: "doc"

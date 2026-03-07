@@ -1,0 +1,10 @@
+# Include README, LICENSE, and source files
+include README.md
+include LICENSE
+include pyproject.toml
+
+# Include all Python files in src/yuque
+recursive-include src/yuque *.py
+
+# Include documentation
+include doc/*.yaml
