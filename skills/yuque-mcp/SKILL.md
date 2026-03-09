@@ -70,9 +70,32 @@ yuque_delete_doc(
 )
 ```
 
-## Claude Desktop Configuration
+## MCP Client Configuration
 
-The MCP server runs via:
+### Recommended: Using `uv run`
+
+```json
+{
+  "mcpServers": {
+    "yuque": {
+      "command": "uv",
+      "args": ["run", "--with", "yuque-sdk[mcp]", "yuque-mcp"],
+      "env": {
+        "YUQUE_TOKEN": "your-token"
+      }
+    }
+  }
+}
+```
+
+**Why `uv run` instead of `uvx`?**
+- `uvx` does not support Python extras (e.g., `[mcp]`)
+- The `[mcp]` extra includes the required `mcp` dependency
+- `uv run --with` creates an isolated environment with all dependencies
+
+### Alternative: Development Mode
+
+For local development:
 
 ```json
 {
@@ -80,6 +103,23 @@ The MCP server runs via:
     "yuque": {
       "command": "uv",
       "args": ["--directory", "/path/to/yuque", "run", "yuque-mcp"],
+      "env": {
+        "YUQUE_TOKEN": "your-token"
+      }
+    }
+  }
+}
+```
+
+### Alternative: Pip Installation
+
+First install: `pip install 'yuque-sdk[mcp]'`
+
+```json
+{
+  "mcpServers": {
+    "yuque": {
+      "command": "yuque-mcp",
       "env": {
         "YUQUE_TOKEN": "your-token"
       }

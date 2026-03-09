@@ -98,22 +98,22 @@ To get your API token:
 
 ### Usage Methods
 
-#### 1️⃣ Claude Desktop Integration
+#### 1️⃣ MCP Client Integration (Claude Desktop / Cherry Studio)
 
-Add the MCP server to your Claude Desktop configuration:
+Add the MCP server to your MCP client configuration:
 
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Claude Desktop macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
+**Claude Desktop Windows**: `%APPDATA%\Claude\claude_desktop_config.json`  
+**Cherry Studio**: Check your MCP settings for the configuration file location
 
-**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-Add this configuration:
+**Option A: Using `uv run` (Recommended)** ✅
 
 ```json
 {
   "mcpServers": {
     "yuque": {
-      "command": "uvx",
-      "args": ["yuque[mcp]"],
+      "command": "uv",
+      "args": ["run", "--with", "yuque-sdk[mcp]", "yuque-mcp"],
       "env": {
         "YUQUE_TOKEN": "your-api-token-here"
       }
@@ -122,8 +122,19 @@ Add this configuration:
 }
 ```
 
-Or if installed via pip:
+**Why `uv run` instead of `uvx`?**
+- `uvx` does **not** support Python extras (e.g., `[mcp]`)
+- `yuque-sdk[mcp]` includes required `mcp` dependency
+- `uv run --with` properly installs all dependencies in an isolated environment
 
+**Option B: Using pip installation**
+
+First install with MCP support:
+```bash
+pip install 'yuque-sdk[mcp]'
+```
+
+Then configure:
 ```json
 {
   "mcpServers": {
@@ -137,12 +148,28 @@ Or if installed via pip:
 }
 ```
 
+**Option C: Using specific Python path**
+
+```json
+{
+  "mcpServers": {
+    "yuque": {
+      "command": "/usr/bin/python3",
+      "args": ["-m", "yuque.mcp.cli"],
+      "env": {
+        "YUQUE_TOKEN": "your-api-token-here"
+      }
+    }
+  }
+}
+```
+
 After updating the config:
-1. **Restart Claude Desktop** completely
-2. The Yuque tools will appear in Claude's available tools
+1. **Restart your MCP client** completely (e.g., Claude Desktop / Cherry Studio)
+2. The Yuque tools will appear in the available tools list
 3. Start using natural language to interact with Yuque!
 
-**Example prompts for Claude:**
+**Example prompts:**
 - "Search for documents about API design in my Yuque"
 - "Get the table of contents for my team's documentation repository"
 - "Create a new document titled 'Meeting Notes' in the Engineering knowledge base"
