@@ -113,7 +113,7 @@ Add the MCP server to your MCP client configuration:
   "mcpServers": {
     "yuque": {
       "command": "uvx",
-      "args": ["yuque-mcp"],
+      "args": ["yuquesdk-mcp"],
       "env": {
         "YUQUE_TOKEN": "your-api-token-here"
       }
@@ -122,7 +122,7 @@ Add the MCP server to your MCP client configuration:
 }
 ```
 
-**Note**: As of v0.1.4+, `mcp` is included in the base dependencies, so `uvx yuque-mcp` works directly.
+**Note**: As of v0.1.4+, `mcp` is included in the base dependencies, so `uvx yuquesdk-mcp` works directly.
 
 **Option B: Using `uv run`**
 
@@ -131,7 +131,7 @@ Add the MCP server to your MCP client configuration:
   "mcpServers": {
     "yuque": {
       "command": "uv",
-      "args": ["run", "--with", "yuque-sdk[mcp]", "yuque-mcp"],
+      "args": ["run", "--with", "yuque-sdk[mcp]", "yuquesdk-mcp"],
       "env": {
         "YUQUE_TOKEN": "your-api-token-here"
       }
@@ -154,7 +154,7 @@ Alternative isolated environment approach:
   "mcpServers": {
     "yuque": {
       "command": "uv",
-      "args": ["run", "--with", "yuque-sdk", "yuque-mcp"],
+      "args": ["run", "--with", "yuque-sdk", "yuquesdk-mcp"],
       "env": {
         "YUQUE_TOKEN": "your-api-token-here"
       }
@@ -175,7 +175,7 @@ Then configure:
 {
   "mcpServers": {
     "yuque": {
-      "command": "yuque-mcp",
+      "command": "yuquesdk-mcp",
       "env": {
         "YUQUE_TOKEN": "your-api-token-here"
       }
@@ -196,7 +196,7 @@ Then configure:
 {
   "mcpServers": {
     "yuque": {
-      "command": "yuque-mcp",
+      "command": "yuquesdk-mcp",
       "env": {
         "YUQUE_TOKEN": "your-api-token-here"
       }
@@ -238,28 +238,28 @@ Run the MCP server directly from command line:
 
 ```bash
 # Start with STDIO transport (default, for MCP clients)
-yuque-mcp
+yuquesdk-mcp
 
 # Start with SSE transport (for HTTP-based clients)
-yuque-mcp --transport sse
+yuquesdk-mcp --transport sse
 
 # Start with SSE on custom port
-yuque-mcp --transport sse --port 9000
+yuquesdk-mcp --transport sse --port 9000
 
 # Start with HTTP transport
-yuque-mcp --transport http
+yuquesdk-mcp --transport http
 
 # Start with custom host and port
-yuque-mcp --transport http --host 127.0.0.1 --port 8888
+yuquesdk-mcp --transport http --host 127.0.0.1 --port 8888
 
 # Enable debug mode
-yuque-mcp --debug
+yuquesdk-mcp --debug
 
 # Set custom log level
-yuque-mcp --log-level DEBUG
+yuquesdk-mcp --log-level DEBUG
 
 # Custom server name
-yuque-mcp --name "my-yuque-server"
+yuquesdk-mcp --name "my-yuque-server"
 ```
 
 **Note**: SSE and HTTP transports require additional dependencies:
@@ -431,7 +431,7 @@ Solutions:
 1. Verify the config file location is correct
 2. Restart Claude Desktop completely (not just refresh)
 3. Check the JSON syntax in the config file
-4. Ensure `yuque-mcp` is in your PATH or use full path
+4. Ensure `yuquesdk-mcp` is in your PATH or use full path
 
 **❌ "Permission denied"**
 
@@ -452,13 +452,13 @@ Enable debug mode for verbose logging:
 
 ```bash
 # Command line
-yuque-mcp --debug
+yuquesdk-mcp --debug
 
 # Or in Claude Desktop config
 {
   "mcpServers": {
     "yuque": {
-      "command": "yuque-mcp",
+      "command": "yuquesdk-mcp",
       "args": ["--debug"],
       "env": {
         "YUQUE_TOKEN": "your-token"
@@ -474,7 +474,7 @@ If you encounter issues:
 
 1. **Check the logs**: Debug mode shows detailed error messages
 2. **Verify token permissions**: Ensure your token has the necessary scopes
-3. **Test the CLI**: Run `yuque-mcp --debug` to see if the server starts correctly
+3. **Test the CLI**: Run `yuquesdk-mcp --debug` to see if the server starts correctly
 4. **Open an issue**: [GitHub Issues](https://github.com/yourusername/yuque-python/issues)
 
 ### 📚 Best Practices
