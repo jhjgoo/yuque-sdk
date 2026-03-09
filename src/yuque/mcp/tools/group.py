@@ -10,14 +10,9 @@ This module provides MCP tools for group operations in Yuque:
 - Get group statistics
 """
 
-from __future__ import annotations
+from mcp.server.fastmcp import FastMCP
 
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from mcp.server.fastmcp import FastMCP
-
-    from ...client import YuqueClient
+from ...client import YuqueClient
 
 
 def register_group_tools(mcp: FastMCP, client: YuqueClient) -> None:

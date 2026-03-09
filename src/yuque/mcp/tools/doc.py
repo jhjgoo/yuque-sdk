@@ -12,8 +12,6 @@ This module provides MCP tools for document operations in Yuque:
 - Get document version
 """
 
-from __future__ import annotations
-
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP

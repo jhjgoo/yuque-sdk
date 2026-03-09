@@ -49,13 +49,6 @@ class RepoAPI(BaseAPI):
         )
         return self._parse_paginated_response(response)
 
-    async def list_async(self, offset: int = 0, limit: int = 100) -> PaginatedResponse:
-        """Async version of list()."""
-        response = await self._request_async(
-            "GET", "/api/v2/user/repos", params={"offset": offset, "limit": limit}
-        )
-        return self._parse_paginated_response(response)
-
     def get_user_repos(self, login: str, offset: int = 0, limit: int = 100) -> PaginatedResponse:
         """Get repositories for a specific user."""
         response = self._request(

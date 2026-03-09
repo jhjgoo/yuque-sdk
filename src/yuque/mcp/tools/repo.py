@@ -6,8 +6,6 @@ Provides MCP tools for repository operations including:
 - Managing table of contents
 """
 
-from __future__ import annotations
-
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP
@@ -173,54 +171,6 @@ def register_repo_tools(mcp: FastMCP, client: YuqueClient) -> None:
                 "success": False,
                 "error": str(e),
                 "message": f"Failed to get repositories for user {login}",
-            }
-
-    @mcp.tool()
-    async def yuque_get_group_repos(
-        login: str, offset: int = 0, limit: int = 100
-    ) -> dict[str, Any]:
-        """Get all repositories in a specific group (team/organization).
-
-        This shows repositories that belong to the specified group,
-        useful for exploring team documentation and knowledge bases.
-
-        Args:
-            login: The login name of the group.
-            offset: Number of items to skip for pagination (default: 0).
-            limit: Maximum number of items to return (default: 100, max: 100).
-
-        Returns:
-            List of group's repositories with pagination metadata.
-
-        Example:
-            To get repositories in group "engineering":
-            {
-                "login": "engineering",
-                "offset": 0,
-                "limit": 20
-            }
-        """
-        try:
-            limit = min(limit, 100)
-            result = client.repo.get_group_repos(login=login, offset=offset, limit=limit)
-
-            repos = [_format_repo(repo) for repo in result.data]
-
-            return {
-                "success": True,
-                "data": {
-                    "group": login,
-                    "repositories": repos,
-                    "total": result.meta.total if result.meta else len(repos),
-                    "offset": offset,
-                    "limit": limit,
-                },
-            }
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e),
-                "message": f"Failed to get repositories for group {login}",
             }
 
     @mcp.tool()

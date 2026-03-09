@@ -11,8 +11,6 @@ Available tool modules:
 - search: Search tools (search across Yuque content)
 """
 
-from __future__ import annotations
-
 from .doc import register_doc_tools
 from .group import register_group_tools
 from .repo import register_repo_tools

@@ -6,16 +6,11 @@ This module provides MCP tools for user operations:
 - Get user's groups/teams
 """
 
-from __future__ import annotations
+from mcp.server.fastmcp import FastMCP
 
-from typing import TYPE_CHECKING
+from ...client import YuqueClient
 
 from ..adapters import adapt_error
-
-if TYPE_CHECKING:
-    from mcp.server.fastmcp import FastMCP
-
-    from ...client import YuqueClient
 
 
 async def get_current_user(client: YuqueClient) -> str:

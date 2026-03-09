@@ -4,16 +4,11 @@ This module provides MCP tools for search operations:
 - Search across Yuque content (documents, repositories, users, groups)
 """
 
-from __future__ import annotations
+from mcp.server.fastmcp import FastMCP
 
-from typing import TYPE_CHECKING
+from ...client import YuqueClient
 
 from ..adapters import adapt_error
-
-if TYPE_CHECKING:
-    from mcp.server.fastmcp import FastMCP
-
-    from ...client import YuqueClient
 
 
 async def search_content(
