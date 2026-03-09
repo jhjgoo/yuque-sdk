@@ -475,7 +475,7 @@ If you encounter issues:
 1. **Check the logs**: Debug mode shows detailed error messages
 2. **Verify token permissions**: Ensure your token has the necessary scopes
 3. **Test the CLI**: Run `yuque-sdk --debug` to see if the server starts correctly
-4. **Open an issue**: [GitHub Issues](https://github.com/yourusername/yuque-python/issues)
+4. **Open an issue**: [GitHub Issues](https://github.com/jhjgoo/yuque-sdk/issues)
 
 ### 📚 Best Practices
 
@@ -498,6 +498,88 @@ If you encounter issues:
    - Use meaningful document titles and slugs
    - Organize content with clear hierarchy
    - Set appropriate visibility levels (public/private)
+
+---
+
+## 🧠 AI Agent Skill (Claude Code / Qoder / OpenClaw)
+
+This library also provides a **Skill** for AI coding assistants, enabling dynamic access to Yuque MCP with efficient context management.
+
+### Why Skill vs MCP?
+
+| Approach | Context Usage | Best For |
+|----------|--------------|----------|
+| MCP Direct | ~15k tokens (all 26 tools loaded) | Frequent multi-tool usage |
+| Skill Wrapper | ~500 tokens (on-demand loading) | Occasional usage, context saving |
+
+### One-Click Installation
+
+Tell your AI Agent:
+
+```
+帮我安装 Yuque Skill：https://raw.githubusercontent.com/jhjgoo/yuque-sdk/main/docs/install.md
+```
+
+The AI will automatically install the skill to the appropriate directory.
+
+### Manual Installation
+
+```bash
+# Claude Code
+mkdir -p ~/.claude/skills/yuque
+curl -sSL https://github.com/jhjgoo/yuque-sdk/archive/main.tar.gz | \
+  tar -xz --strip-components=2 -C ~/.claude/skills yuque-sdk-main/skills/yuque
+
+# Qoder
+mkdir -p ~/.qoder/skills/yuque
+curl -sSL https://github.com/jhjgoo/yuque-sdk/archive/main.tar.gz | \
+  tar -xz --strip-components=2 -C ~/.qoder/skills yuque-sdk-main/skills/yuque
+
+# OpenClaw
+mkdir -p ~/.openclaw/skills/yuque
+curl -sSL https://github.com/jhjgoo/yuque-sdk/archive/main.tar.gz | \
+  tar -xz --strip-components=2 -C ~/.openclaw/skills yuque-sdk-main/skills/yuque
+```
+
+### Configuration
+
+Edit `mcp-config.json` in the skill directory:
+
+```json
+{
+  "name": "yuque",
+  "command": "uvx",
+  "args": ["yuque-sdk"],
+  "env": {
+    "YUQUE_TOKEN": "your-token-here"
+  }
+}
+```
+
+For OpenClaw, you can also configure via `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "skills": {
+    "entries": {
+      "yuque": {
+        "enabled": true,
+        "apiKey": "your-token-here"
+      }
+    }
+  }
+}
+```
+
+### Usage
+
+In your AI agent, type:
+
+```
+/yuque
+```
+
+This loads the skill with access to all 26 Yuque tools.
 
 ---
 
@@ -994,5 +1076,6 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 ## Links
 
 - [Yuque OpenAPI Documentation](https://www.yuque.com/yuque/developer/api)
-- [PyPI Package](https://pypi.org/project/yuque/)
-- [Issue Tracker](https://github.com/yourusername/yuque-python/issues)
+- [PyPI Package](https://pypi.org/project/yuque-sdk/)
+- [GitHub Repository](https://github.com/jhjgoo/yuque-sdk)
+- [Skill Installation Guide](https://github.com/jhjgoo/yuque-sdk/blob/main/docs/install.md)
