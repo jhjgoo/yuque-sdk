@@ -243,8 +243,14 @@ yuque-mcp
 # Start with SSE transport (for HTTP-based clients)
 yuque-mcp --transport sse
 
+# Start with SSE on custom port
+yuque-mcp --transport sse --port 9000
+
 # Start with HTTP transport
 yuque-mcp --transport http
+
+# Start with custom host and port
+yuque-mcp --transport http --host 127.0.0.1 --port 8888
 
 # Enable debug mode
 yuque-mcp --debug
