@@ -79,7 +79,7 @@ yuque_delete_doc(
   "mcpServers": {
     "yuque": {
       "command": "uv",
-      "args": ["run", "--with", "yuque-sdk[mcp]", "yuque-mcp"],
+      "args": ["run", "--with", "yuque-sdk[mcp]", "yuque-sdk"],
       "env": {
         "YUQUE_TOKEN": "your-token"
       }
@@ -102,7 +102,7 @@ For local development:
   "mcpServers": {
     "yuque": {
       "command": "uv",
-      "args": ["--directory", "/path/to/yuque", "run", "yuque-mcp"],
+      "args": ["--directory", "/path/to/yuque", "run", "yuque-sdk"],
       "env": {
         "YUQUE_TOKEN": "your-token"
       }
@@ -119,7 +119,7 @@ First install: `pip install 'yuque-sdk[mcp]'`
 {
   "mcpServers": {
     "yuque": {
-      "command": "yuque-mcp",
+      "command": "yuque-sdk",
       "env": {
         "YUQUE_TOKEN": "your-token"
       }

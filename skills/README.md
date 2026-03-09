@@ -21,7 +21,7 @@ mkdir -p ~/.claude/skills
 
 # 复制技能到全局目录
 cp -r skills/yuque-sdk ~/.claude/skills/
-cp -que-mcp ~/.r skills/yuclaude/skills/
+cp -r skills/yuque-mcp ~/.claude/skills/
 ```
 
 **效果**: 这些技能将对你所有 Claude 项目生效。
@@ -41,13 +41,10 @@ cp -r skills/yuque-mcp .claude/skills/
 
 **效果**: 这些技能仅对当前项目生效。
 
-### 方法三：复制到 skills 目录
+### 方法三：符号链接（推荐开发时使用）
 
 ```bash
-# 方案 A: 复制整个 skills 文件夹到全局
-cp -r /Users/jianghongjian/Workspace/Code/Python/yuque/skills ~/.claude/skills/yuque
-
-# 方案 B: 符号链接（推荐开发时使用）
+# 符号链接到全局目录
 ln -sf /Users/jianghongjian/Workspace/Code/Python/yuque/skills/yuque-sdk ~/.claude/skills/yuque-sdk
 ln -sf /Users/jianghongjian/Workspace/Code/Python/yuque/skills/yuque-mcp ~/.claude/skills/yuque-mcp
 ```
@@ -107,6 +104,8 @@ Claude 会根据对话内容自动选择合适的技能。例如：
 - 测试示例
 - 常见问题解决
 
+**MCP 命令**: `yuque-sdk` (通过 `uvx yuque-sdk` 运行)
+
 ## 验证安装
 
 安装完成后，可以询问 Claude：
@@ -118,7 +117,7 @@ What skills do you have available?
 或直接使用：
 
 ```
-/yuque-sdk 帮助
+/yuque-mcp 帮助
 ```
 
 ## 卸载技能
