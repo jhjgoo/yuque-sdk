@@ -1,0 +1,10 @@
+{
+  "name": "yuque",
+  "command": "uvx",
+  "args": [
+    "yuque-sdk"
+  ],
+  "env": {
+    "YUQUE_TOKEN": "your-api-token-here"
+  }
+}

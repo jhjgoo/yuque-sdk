@@ -1,0 +1,8 @@
+{
+  "name": "skill-yuque",
+  "version": "1.0.0",
+  "description": "Claude Skill wrapper for yuque MCP server",
+  "scripts": {
+    "setup": "pip install mcp"
+  }
+}

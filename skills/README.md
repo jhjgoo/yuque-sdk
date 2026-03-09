@@ -1,152 +1,83 @@
-# Yuque Skills 安装指南
+# Yuque Skills
 
-本文件夹包含 Claude Code (Claude Desktop) 专用技能 (Skills)，用于增强 yuque-python-sdk 项目的开发体验。
+语雀 MCP 服务的 Claude/Qoder Skill 封装，提供高效的上下文管理。
 
-## 技能列表
+## 为什么用 Skill 而不是直接用 MCP？
 
-| 技能名称 | 描述 |
-|---------|------|
-| `yuque-sdk` | yuque SDK 开发技能 - 用于添加新 API、修复 bug、写测试 |
-| `yuque-mcp` | yuque MCP 服务器技能 - 用于 MCP 工具测试和调试 |
+| 方式 | 上下文占用 | 适用场景 |
+|-----|----------|---------|
+| MCP 直连 | ~15k tokens (26 工具全部加载) | 需要频繁调用多个工具 |
+| Skill 封装 | ~500 tokens (按需加载) | 偶尔使用，节省上下文 |
 
-## 安装方法
+## 安装
 
-### 方法一：全局安装（推荐）
+### 方式 1：一键安装（推荐）
 
-将技能复制到 Claude 的全局技能目录：
+告诉 AI Agent：
+
+```
+帮我安装 Yuque Skill：https://raw.githubusercontent.com/jhjgoo/yuque-sdk/main/docs/install.md
+```
+
+### 方式 2：手动安装
 
 ```bash
-# 创建全局技能目录
+# Claude Code
 mkdir -p ~/.claude/skills
+curl -sSL https://github.com/jhjgoo/yuque-sdk/archive/main.tar.gz | \
+  tar -xz --strip-components=2 -C ~/.claude/skills yuque-sdk-main/skills/yuque
 
-# 复制技能到全局目录
-cp -r skills/yuque-sdk ~/.claude/skills/
-cp -r skills/yuque-mcp ~/.claude/skills/
+# Qoder
+mkdir -p ~/.qoder/skills
+curl -sSL https://github.com/jhjgoo/yuque-sdk/archive/main.tar.gz | \
+  tar -xz --strip-components=2 -C ~/.qoder/skills yuque-sdk-main/skills/yuque
 ```
 
-**效果**: 这些技能将对你所有 Claude 项目生效。
-
-### 方法二：项目级安装
-
-将技能复制到当前项目：
+### 方式 3：克隆仓库
 
 ```bash
-# 创建项目技能目录
-mkdir -p .claude/skills
-
-# 复制技能到项目目录
-cp -r skills/yuque-sdk .claude/skills/
-cp -r skills/yuque-mcp .claude/skills/
+git clone https://github.com/jhjgoo/yuque-sdk.git ~/.yuque-sdk
+ln -sf ~/.yuque-sdk/skills/yuque ~/.claude/skills/yuque
 ```
 
-**效果**: 这些技能仅对当前项目生效。
+## 配置
 
-### 方法三：符号链接（推荐开发时使用）
+安装后，编辑 `~/.claude/skills/yuque/mcp-config.json`：
 
-```bash
-# 符号链接到全局目录
-ln -sf /Users/jianghongjian/Workspace/Code/Python/yuque/skills/yuque-sdk ~/.claude/skills/yuque-sdk
-ln -sf /Users/jianghongjian/Workspace/Code/Python/yuque/skills/yuque-mcp ~/.claude/skills/yuque-mcp
+```json
+{
+  "name": "yuque",
+  "command": "uvx",
+  "args": ["yuque-sdk"],
+  "env": {
+    "YUQUE_TOKEN": "your-actual-token-here"
+  }
+}
 ```
 
-**注意**: 使用符号链接可以在修改技能后立即生效，无需重新复制。
+Token 获取：https://www.yuque.com → 设置 → 开发者设置 → Personal Access Token
 
-## 使用方法
+## 使用
 
-### 手动调用技能
-
-在 Claude 中输入：
+在 Claude Code 或 Qoder 中：
 
 ```
-/yuque-sdk
+/yuque
 ```
 
-或
+加载后即可使用 26 个语雀工具：用户管理、文档管理、仓库管理、团队管理、搜索等。
 
-```
-/yuque-mcp
-```
+## 包含的工具
 
-### 自动触发
+| 类别 | 工具 |
+|-----|------|
+| 用户 | `yuque_get_current_user`, `yuque_get_user`, `yuque_get_user_groups` |
+| 文档 | `yuque_get_doc`, `yuque_create_doc`, `yuque_update_doc`, `yuque_delete_doc`, ... |
+| 仓库 | `yuque_get_repo`, `yuque_list_repos`, `yuque_get_repo_toc`, ... |
+| 团队 | `yuque_get_group`, `yuque_get_group_repos`, `yuque_get_group_members`, ... |
+| 搜索 | `yuque_search` |
 
-Claude 会根据对话内容自动选择合适的技能。例如：
-- 当你讨论 SDK 代码时会触发 `yuque-sdk`
-- 当你测试 MCP 工具时会触发 `yuque-mcp`
+## 链接
 
-## 技能详解
-
-### yuque-sdk
-
-用于 yuque-python-sdk 库开发：
-
-- 添加新的 API 端点
-- 修复 bug
-- 编写测试
-- 扩展功能
-
-包含：
-- 项目结构说明
-- API 开发模式
-- 测试运行方法
-- 常用 API 路径
-
-### yuque-mcp
-
-用于 MCP 服务器开发和测试：
-
-- 列出所有可用工具
-- 测试工具功能
-- 调试工具问题
-- API 操作指南
-
-包含：
-- 所有 MCP 工具列表
-- 测试示例
-- 常见问题解决
-
-**MCP 命令**: `yuque-sdk` (通过 `uvx yuque-sdk` 运行)
-
-## 验证安装
-
-安装完成后，可以询问 Claude：
-
-```
-What skills do you have available?
-```
-
-或直接使用：
-
-```
-/yuque-mcp 帮助
-```
-
-## 卸载技能
-
-```bash
-# 删除全局技能
-rm -rf ~/.claude/skills/yuque-sdk
-rm -rf ~/.claude/skills/yuque-mcp
-
-# 删除项目技能
-rm -rf .claude/skills/yuque-sdk
-rm -rf .claude/skills/yuque-mcp
-```
-
-## 技能格式
-
-技能遵循 [Agent Skills](https://agentskills.io) 标准：
-
-```yaml
----
-name: skill-name
-description: 技能描述 - 告诉 Claude 何时使用这个技能
----
-
-# 技能说明文档
-```
-
-## 更多信息
-
-- [Claude Skills 官方文档](https://code.claude.com/docs/en/skills)
-- [Agent Skills 标准](https://agentskills.io)
-- [官方技能示例](https://github.com/anthropics/skills)
+- **PyPI**: https://pypi.org/project/yuque-sdk/
+- **GitHub**: https://github.com/jhjgoo/yuque-sdk
