@@ -669,6 +669,7 @@ async def test_update_doc_success(mock_client, sample_document):
 
     tool_func = mcp._tool_manager._tools["yuque_update_doc"].fn
     result = await tool_func(
+        book_id=3001,
         doc_id=4001,
         title="Updated Title",
         body="Updated content",
@@ -693,10 +694,11 @@ async def test_update_doc_partial(mock_client, sample_document):
     register_doc_tools(mcp, mock_client)
 
     tool_func = mcp._tool_manager._tools["yuque_update_doc"].fn
-    result = await tool_func(doc_id=4001, title="New Title")
+    result = await tool_func(book_id=3001, doc_id=4001, title="New Title")
 
     assert result["success"] is True
     mock_client.doc.update.assert_called_once_with(
+        book_id=3001,
         doc_id=4001,
         title="New Title",
         slug=None,
@@ -719,7 +721,7 @@ async def test_update_doc_not_found(mock_client):
     register_doc_tools(mcp, mock_client)
 
     tool_func = mcp._tool_manager._tools["yuque_update_doc"].fn
-    result = await tool_func(doc_id=999999, title="Test")
+    result = await tool_func(book_id=3001, doc_id=999999, title="Test")
 
     assert result["success"] is False
     assert "Document not found" in result["error"]
@@ -789,13 +791,13 @@ async def test_delete_doc_success(mock_client):
     register_doc_tools(mcp, mock_client)
 
     tool_func = mcp._tool_manager._tools["yuque_delete_doc"].fn
-    result = await tool_func(doc_id=4001)
+    result = await tool_func(book_id=3001, doc_id=4001)
 
     assert result["success"] is True
     assert result["data"]["doc_id"] == 4001
     assert result["data"]["deleted"] is True
     assert "deleted successfully" in result["message"]
-    mock_client.doc.delete.assert_called_once_with(doc_id=4001)
+    mock_client.doc.delete.assert_called_once_with(book_id=3001, doc_id=4001)
 
 
 @pytest.mark.asyncio
@@ -811,7 +813,7 @@ async def test_delete_doc_not_found(mock_client):
     register_doc_tools(mcp, mock_client)
 
     tool_func = mcp._tool_manager._tools["yuque_delete_doc"].fn
-    result = await tool_func(doc_id=999999)
+    result = await tool_func(book_id=3001, doc_id=999999)
 
     assert result["success"] is False
     assert "Document not found" in result["error"]
@@ -830,7 +832,7 @@ async def test_delete_doc_permission_denied(mock_client):
     register_doc_tools(mcp, mock_client)
 
     tool_func = mcp._tool_manager._tools["yuque_delete_doc"].fn
-    result = await tool_func(doc_id=4001)
+    result = await tool_func(book_id=3001, doc_id=4001)
 
     assert result["success"] is False
     assert "Cannot delete" in result["error"]

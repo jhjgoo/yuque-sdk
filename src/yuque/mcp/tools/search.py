@@ -7,7 +7,6 @@ This module provides MCP tools for search operations:
 from mcp.server.fastmcp import FastMCP
 
 from ...client import YuqueClient
-
 from ..adapters import adapt_error
 
 

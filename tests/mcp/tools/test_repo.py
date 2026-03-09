@@ -524,68 +524,6 @@ async def test_yuque_get_user_repos_empty(mock_mcp, mock_client):
 # ============================================
 
 
-@pytest.mark.asyncio
-async def test_yuque_get_group_repos_success(mock_mcp, mock_client, sample_repo):
-    """Test getting group repositories successfully."""
-    from yuque.models import PaginationMeta
-
-    mock_result = MagicMock()
-    mock_result.data = [sample_repo]
-    mock_result.meta = PaginationMeta(total=1)
-    mock_client.repo.get_group_repos.return_value = mock_result
-
-    register_repo_tools(mock_mcp, mock_client)
-    tools = list(mock_mcp._tool_manager._tools.values())
-    get_group_repos_tool = next(t for t in tools if t.name == "yuque_get_group_repos")
-
-    result = await get_group_repos_tool.fn(login="testgroup")
-
-    assert result["success"] is True
-    assert result["data"]["group"] == "testgroup"
-    assert len(result["data"]["repositories"]) == 1
-    assert result["data"]["total"] == 1
-    mock_client.repo.get_group_repos.assert_called_once_with(login="testgroup", offset=0, limit=100)
-
-
-@pytest.mark.asyncio
-async def test_yuque_get_group_repos_not_found(mock_mcp, mock_client):
-    """Test getting repositories for non-existent group."""
-    from yuque.exceptions import NotFoundError
-
-    mock_client.repo.get_group_repos.side_effect = NotFoundError("Group not found")
-
-    register_repo_tools(mock_mcp, mock_client)
-    tools = list(mock_mcp._tool_manager._tools.values())
-    get_group_repos_tool = next(t for t in tools if t.name == "yuque_get_group_repos")
-
-    result = await get_group_repos_tool.fn(login="unknown")
-
-    assert result["success"] is False
-    assert "Group not found" in result["error"]
-    assert "Failed to get repositories for group unknown" in result["message"]
-
-
-@pytest.mark.asyncio
-async def test_yuque_get_group_repos_with_pagination(mock_mcp, mock_client, sample_repo):
-    """Test getting group repositories with pagination."""
-    from yuque.models import PaginationMeta
-
-    mock_result = MagicMock()
-    mock_result.data = [sample_repo]
-    mock_result.meta = PaginationMeta(total=50)
-    mock_client.repo.get_group_repos.return_value = mock_result
-
-    register_repo_tools(mock_mcp, mock_client)
-    tools = list(mock_mcp._tool_manager._tools.values())
-    get_group_repos_tool = next(t for t in tools if t.name == "yuque_get_group_repos")
-
-    result = await get_group_repos_tool.fn(login="testgroup", offset=10, limit=30)
-
-    assert result["data"]["offset"] == 10
-    assert result["data"]["limit"] == 30
-    mock_client.repo.get_group_repos.assert_called_once_with(login="testgroup", offset=10, limit=30)
-
-
 # ============================================
 # Tool: yuque_get_repo_toc
 # ============================================
@@ -776,12 +714,11 @@ def test_register_repo_tools(mock_mcp, mock_client):
     assert "yuque_get_repo_by_path" in tool_names
     assert "yuque_list_repos" in tool_names
     assert "yuque_get_user_repos" in tool_names
-    assert "yuque_get_group_repos" in tool_names
     assert "yuque_get_repo_toc" in tool_names
     assert "yuque_get_repo_toc_by_path" in tool_names
 
-    # Verify we have exactly 7 tools
-    assert len(mock_mcp._tool_manager._tools) == 7
+    # Verify we have exactly 6 tools (removed yuque_get_group_repos - it's in group tools)
+    assert len(mock_mcp._tool_manager._tools) == 6
 
 
 def test_tool_descriptions(mock_mcp, mock_client):

@@ -9,7 +9,6 @@ This module provides MCP tools for user operations:
 from mcp.server.fastmcp import FastMCP
 
 from ...client import YuqueClient
-
 from ..adapters import adapt_error
 
 
