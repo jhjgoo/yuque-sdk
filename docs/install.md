@@ -14,12 +14,12 @@ Copy this to your AI Agent:
 
 ### Goal
 
-Install Yuque Skill for Claude Code / Qoder to enable dynamic access to Yuque API with efficient context management.
+Install Yuque Skill for Claude Code / Qoder / OpenClaw to enable dynamic access to Yuque API with efficient context management.
 
 ### ⚠️ Boundaries
 
 - **DO NOT** run commands with `sudo`
-- **DO NOT** modify files outside `~/.claude/` or `~/.qoder/`
+- **DO NOT** modify files outside `~/.claude/`, `~/.qoder/`, or `~/.openclaw/`
 - **DO NOT** overwrite existing skills without asking
 
 ### Step 1: Detect Agent Type
@@ -34,6 +34,11 @@ ls -la ~/.claude/ 2>/dev/null && echo "Claude detected" || echo "Claude not foun
 **For Qoder:**
 ```bash
 ls -la ~/.qoder/ 2>/dev/null && echo "Qoder detected" || echo "Qoder not found"
+```
+
+**For OpenClaw:**
+```bash
+ls -la ~/.openclaw/ 2>/dev/null && echo "OpenClaw detected" || echo "OpenClaw not found"
 ```
 
 ### Step 2: Install Skill
@@ -64,6 +69,20 @@ curl -sSL https://raw.githubusercontent.com/jhjgoo/yuque-sdk/main/skills/yuque/m
 curl -sSL https://raw.githubusercontent.com/jhjgoo/yuque-sdk/main/skills/yuque/package.json \
   -o ~/.qoder/skills/yuque/package.json
 chmod +x ~/.qoder/skills/yuque/executor.py
+```
+
+**For OpenClaw:**
+```bash
+mkdir -p ~/.openclaw/skills/yuque
+curl -sSL https://raw.githubusercontent.com/jhjgoo/yuque-sdk/main/skills/yuque/SKILL.md \
+  -o ~/.openclaw/skills/yuque/SKILL.md
+curl -sSL https://raw.githubusercontent.com/jhjgoo/yuque-sdk/main/skills/yuque/executor.py \
+  -o ~/.openclaw/skills/yuque/executor.py
+curl -sSL https://raw.githubusercontent.com/jhjgoo/yuque-sdk/main/skills/yuque/mcp-config.json \
+  -o ~/.openclaw/skills/yuque/mcp-config.json
+curl -sSL https://raw.githubusercontent.com/jhjgoo/yuque-sdk/main/skills/yuque/package.json \
+  -o ~/.openclaw/skills/yuque/package.json
+chmod +x ~/.openclaw/skills/yuque/executor.py
 ```
 
 ### Step 3: Get Yuque API Token
@@ -109,6 +128,42 @@ cat > ~/.qoder/skills/yuque/mcp-config.json << 'EOF'
 EOF
 ```
 
+**For OpenClaw (two options):**
+
+Option A - Update mcp-config.json:
+```bash
+cat > ~/.openclaw/skills/yuque/mcp-config.json << 'EOF'
+{
+  "name": "yuque",
+  "command": "uvx",
+  "args": ["yuque-sdk"],
+  "env": {
+    "YUQUE_TOKEN": "USER_TOKEN_HERE"
+  }
+}
+EOF
+```
+
+Option B - Use openclaw.json config (recommended for OpenClaw):
+```bash
+mkdir -p ~/.openclaw
+cat >> ~/.openclaw/openclaw.json << 'EOF'
+{
+  "skills": {
+    "entries": {
+      "yuque": {
+        "enabled": true,
+        "apiKey": "USER_TOKEN_HERE",
+        "env": {
+          "YUQUE_TOKEN": "USER_TOKEN_HERE"
+        }
+      }
+    }
+  }
+}
+EOF
+```
+
 Replace `USER_TOKEN_HERE` with the actual token from user.
 
 ### Step 5: Install Dependencies
@@ -124,6 +179,8 @@ pip install mcp
 ls -la ~/.claude/skills/yuque/
 # or
 ls -la ~/.qoder/skills/yuque/
+# or
+ls -la ~/.openclaw/skills/yuque/
 ```
 
 Expected output should show: `SKILL.md`, `executor.py`, `mcp-config.json`, `package.json`
@@ -133,6 +190,8 @@ Expected output should show: `SKILL.md`, `executor.py`, `mcp-config.json`, `pack
 cd ~/.claude/skills/yuque && python executor.py --list
 # or
 cd ~/.qoder/skills/yuque && python executor.py --list
+# or
+cd ~/.openclaw/skills/yuque && python executor.py --list
 ```
 
 Expected output: JSON array of 26 available tools.
@@ -184,9 +243,15 @@ Once done, confirm with the user:
 ### 🗑 Uninstall
 
 ```bash
+# Claude Code
 rm -rf ~/.claude/skills/yuque
-# or
+
+# Qoder
 rm -rf ~/.qoder/skills/yuque
+
+# OpenClaw
+rm -rf ~/.openclaw/skills/yuque
+# Also remove from openclaw.json if configured there
 ```
 
 ---

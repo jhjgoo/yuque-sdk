@@ -1,13 +1,21 @@
 # Yuque Skills
 
-语雀 MCP 服务的 Claude/Qoder Skill 封装，提供高效的上下文管理。
+语雀 MCP 服务的 Claude/Qoder/OpenClaw Skill 封装，提供高效的上下文管理。
 
 ## 为什么用 Skill 而不是直接用 MCP？
 
 | 方式 | 上下文占用 | 适用场景 |
-|-----|----------|---------|
+|-----|----------|----------|
 | MCP 直连 | ~15k tokens (26 工具全部加载) | 需要频繁调用多个工具 |
 | Skill 封装 | ~500 tokens (按需加载) | 偶尔使用，节省上下文 |
+
+## 兼容性
+
+| Agent | 支持 | Skill 目录 |
+|-------|------|-------------|
+| Claude Code | ✅ | `~/.claude/skills/yuque/` |
+| Qoder | ✅ | `~/.qoder/skills/yuque/` |
+| OpenClaw | ✅ | `~/.openclaw/skills/yuque/` |
 
 ## 安装
 
@@ -31,18 +39,29 @@ curl -sSL https://github.com/jhjgoo/yuque-sdk/archive/main.tar.gz | \
 mkdir -p ~/.qoder/skills
 curl -sSL https://github.com/jhjgoo/yuque-sdk/archive/main.tar.gz | \
   tar -xz --strip-components=2 -C ~/.qoder/skills yuque-sdk-main/skills/yuque
+
+# OpenClaw
+mkdir -p ~/.openclaw/skills
+curl -sSL https://github.com/jhjgoo/yuque-sdk/archive/main.tar.gz | \
+  tar -xz --strip-components=2 -C ~/.openclaw/skills yuque-sdk-main/skills/yuque
 ```
 
 ### 方式 3：克隆仓库
 
 ```bash
 git clone https://github.com/jhjgoo/yuque-sdk.git ~/.yuque-sdk
+
+# 符号链接到对应 Agent
 ln -sf ~/.yuque-sdk/skills/yuque ~/.claude/skills/yuque
+# 或
+ln -sf ~/.yuque-sdk/skills/yuque ~/.qoder/skills/yuque
+# 或
+ln -sf ~/.yuque-sdk/skills/yuque ~/.openclaw/skills/yuque
 ```
 
 ## 配置
 
-安装后，编辑 `~/.claude/skills/yuque/mcp-config.json`：
+安装后，编辑对应目录下的 `mcp-config.json`：
 
 ```json
 {
@@ -51,6 +70,24 @@ ln -sf ~/.yuque-sdk/skills/yuque ~/.claude/skills/yuque
   "args": ["yuque-sdk"],
   "env": {
     "YUQUE_TOKEN": "your-actual-token-here"
+  }
+}
+```
+
+**OpenClaw 替代配置方式（通过 openclaw.json）：**
+
+```json
+{
+  "skills": {
+    "entries": {
+      "yuque": {
+        "enabled": true,
+        "apiKey": "your-token-here",
+        "env": {
+          "YUQUE_TOKEN": "your-token-here"
+        }
+      }
+    }
   }
 }
 ```

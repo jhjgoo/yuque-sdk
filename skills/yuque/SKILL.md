@@ -2,6 +2,8 @@
 name: yuque
 description: Dynamic access to Yuque MCP server (26 tools for docs, repos, groups, search)
 version: 1.0.0
+homepage: https://github.com/jhjgoo/yuque-sdk
+metadata: { "openclaw": { "emoji": "📚", "homepage": "https://github.com/jhjgoo/yuque-sdk", "requires": { "bins": ["uvx", "python3"], "env": ["YUQUE_TOKEN"] }, "primaryEnv": "YUQUE_TOKEN" } }
 ---
 
 # Yuque Skill
