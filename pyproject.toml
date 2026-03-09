@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "yuque-sdk"
-version = "0.1.2"
+version = "0.1.3"
 description = "A Python client library for Yuque OpenAPI"
 readme = "README.md"
 license = { text = "Apache-2.0" }
