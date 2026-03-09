@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "yuque-sdk"
-version = "0.1.5"
+version = "0.1.6"
 description = "A Python client library for Yuque OpenAPI"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -58,8 +58,8 @@ redis = [
 ]
 
 [project.scripts]
-# 使用 yuquesdk-mcp 避免与 yuque_mcp 包的 yuque-mcp 命令冲突
-yuquesdk-mcp = "yuque.mcp.cli:main"
+# 命令名与包名相同，uvx yuque-sdk 可直接使用
+yuque-sdk = "yuque.mcp.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/yourusername/yuque-python"
