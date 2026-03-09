@@ -153,16 +153,15 @@ cat >> ~/.openclaw/openclaw.json << 'EOF'
     "entries": {
       "yuque": {
         "enabled": true,
-        "apiKey": "USER_TOKEN_HERE",
-        "env": {
-          "YUQUE_TOKEN": "USER_TOKEN_HERE"
-        }
+        "apiKey": "USER_TOKEN_HERE"
       }
     }
   }
 }
 EOF
 ```
+
+Note: `apiKey` automatically sets the `YUQUE_TOKEN` environment variable (defined by `primaryEnv` in SKILL.md).
 
 Replace `USER_TOKEN_HERE` with the actual token from user.
 

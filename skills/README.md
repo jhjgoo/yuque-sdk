@@ -82,15 +82,14 @@ ln -sf ~/.yuque-sdk/skills/yuque ~/.openclaw/skills/yuque
     "entries": {
       "yuque": {
         "enabled": true,
-        "apiKey": "your-token-here",
-        "env": {
-          "YUQUE_TOKEN": "your-token-here"
-        }
+        "apiKey": "your-token-here"
       }
     }
   }
 }
 ```
+
+> `apiKey` 会自动设置 `YUQUE_TOKEN` 环境变量（通过 SKILL.md 中的 `primaryEnv` 定义）
 
 Token 获取：https://www.yuque.com → 设置 → 开发者设置 → Personal Access Token
 
