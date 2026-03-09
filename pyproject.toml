@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "yuque-sdk"
-version = "0.1.3"
+version = "0.1.4"
 description = "A Python client library for Yuque OpenAPI"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -27,6 +27,8 @@ dependencies = [
     "httpx>=0.27.0",
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
+    # MCP SDK is required for the yuque-mcp command
+    "mcp>=0.9.0",
 ]
 
 [project.optional-dependencies]
@@ -46,9 +48,7 @@ docs = [
     "sphinx-rtd-theme>=2.0.0",
 ]
 mcp = [
-    # MCP Python SDK for building MCP servers
-    "mcp>=0.9.0",
-    # FastAPI for HTTP transport (optional)
+    # FastAPI for HTTP transport (optional, only needed for --transport http)
     "fastapi>=0.100.0",
     # Uvicorn ASGI server for HTTP transport (optional)
     "uvicorn>=0.22.0",
