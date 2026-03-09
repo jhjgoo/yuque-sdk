@@ -106,7 +106,25 @@ Add the MCP server to your MCP client configuration:
 **Claude Desktop Windows**: `%APPDATA%\Claude\claude_desktop_config.json`  
 **Cherry Studio**: Check your MCP settings for the configuration file location
 
-**Option A: Using `uv run` (Recommended)** ✅
+**Option A: Using `uvx` (Simplest)** ✅
+
+```json
+{
+  "mcpServers": {
+    "yuque": {
+      "command": "uvx",
+      "args": ["yuque-mcp"],
+      "env": {
+        "YUQUE_TOKEN": "your-api-token-here"
+      }
+    }
+  }
+}
+```
+
+**Note**: As of v0.1.4+, `mcp` is included in the base dependencies, so `uvx yuque-mcp` works directly.
+
+**Option B: Using `uv run`**
 
 ```json
 {
@@ -127,7 +145,25 @@ Add the MCP server to your MCP client configuration:
 - `yuque-sdk[mcp]` includes required `mcp` dependency
 - `uv run --with` properly installs all dependencies in an isolated environment
 
-**Option B: Using pip installation**
+**Option B: Using `uv run`**
+
+Alternative isolated environment approach:
+
+```json
+{
+  "mcpServers": {
+    "yuque": {
+      "command": "uv",
+      "args": ["run", "--with", "yuque-sdk", "yuque-mcp"],
+      "env": {
+        "YUQUE_TOKEN": "your-api-token-here"
+      }
+    }
+  }
+}
+```
+
+**Option C: Using pip installation**
 
 First install with MCP support:
 ```bash
@@ -148,7 +184,28 @@ Then configure:
 }
 ```
 
-**Option C: Using specific Python path**
+**Option C: Using pip installation**
+
+Install globally, then use directly:
+```bash
+pip install yuque-sdk
+```
+
+Then configure:
+```json
+{
+  "mcpServers": {
+    "yuque": {
+      "command": "yuque-mcp",
+      "env": {
+        "YUQUE_TOKEN": "your-api-token-here"
+      }
+    }
+  }
+}
+```
+
+**Option D: Using specific Python path**
 
 ```json
 {
@@ -198,6 +255,21 @@ yuque-mcp --log-level DEBUG
 # Custom server name
 yuque-mcp --name "my-yuque-server"
 ```
+
+**Note**: SSE and HTTP transports require additional dependencies:
+
+```bash
+# Install with HTTP support
+pip install 'yuque-sdk[mcp]'
+
+# The [mcp] extras includes:
+# - fastapi>=0.100.0 (for HTTP server)
+# - uvicorn>=0.22.0 (ASGI server)
+```
+
+**When to use different transports:**
+- **stdio** (default): For Claude Desktop, Cherry Studio local integration
+- **sse/http**: For remote server deployment, web-based clients
 
 #### 3️⃣ Programmatic Usage
 
