@@ -68,6 +68,19 @@ For more information, visit:
     )
 
     parser.add_argument(
+        "--host",
+        default="0.0.0.0",
+        help="Host to bind to for HTTP/SSE transport (default: 0.0.0.0)",
+    )
+
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8000,
+        help="Port to listen on for HTTP/SSE transport (default: 8000)",
+    )
+
+    parser.add_argument(
         "--debug",
         action="store_true",
         help="Enable debug mode with verbose logging",
@@ -170,6 +183,8 @@ def main() -> NoReturn:
 
     logger.info(f"Starting Yuque MCP server v{__version__}")
     logger.info(f"Transport: {transport}")
+    if args.transport in ["sse", "http"]:
+        logger.info(f"Host: {args.host}:{args.port}")
     logger.info(f"Debug mode: {args.debug}")
     logger.info(f"Log level: {args.log_level}")
 
@@ -178,6 +193,8 @@ def main() -> NoReturn:
             name=args.name,
             debug=args.debug,
             log_level=args.log_level,
+            host=args.host,
+            port=args.port,
         )
 
         logger.info(f"Running server with {transport} transport...")

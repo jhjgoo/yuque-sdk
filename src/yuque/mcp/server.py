@@ -65,8 +65,20 @@ class MCPServer:
         instructions: str | None = None,
         debug: bool = False,
         log_level: str = "INFO",
+        host: str = "0.0.0.0",
+        port: int = 8000,
     ) -> None:
-        """Initialize the MCP server."""
+        """Initialize the MCP server.
+
+        Args:
+            token: Yuque API token for authentication.
+            name: Server name for MCP identification.
+            instructions: Human-readable instructions for using the server.
+            debug: Enable debug mode.
+            log_level: Logging level.
+            host: Host to bind to for HTTP/SSE transport (default: 0.0.0.0).
+            port: Port to listen on for HTTP/SSE transport (default: 8000).
+        """
         self._setup_logging(log_level, debug)
 
         self._token = token or os.getenv("YUQUE_TOKEN")
@@ -87,6 +99,8 @@ class MCPServer:
             instructions=instructions,
             debug=debug,
             log_level=log_level,
+            host=host,
+            port=port,
         )
 
         self._client = YuqueClient(token=self._token)
